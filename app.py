@@ -8,14 +8,14 @@ from io import BytesIO
 from uuid import uuid4
 import os
 
-# ---------------- Config ----------------
-MODEL_PATH = "weights/best.pt"   # debe existir
-MAX_MB = 8                       # límite tamaño imagen en MB
-# ---------------------------------------
+# Config 
+MODEL_PATH = "weights/best.pt"   
+MAX_MB = 8                       
+
 
 app = FastAPI(title="VehDamage API", version="1.0", docs_url=None, redoc_url=None)
 
-# CORS abierto para pruebas (útil si luego consumes desde móvil o web)
+# CORS abierto para pruebas 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], allow_credentials=True,
@@ -26,7 +26,7 @@ app.add_middleware(
 os.makedirs("static", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# carga del modelo (fallar temprano si no existe)
+# cargar del modelo
 if not os.path.exists(MODEL_PATH):
     raise RuntimeError(f"No encuentro el modelo en {MODEL_PATH}. Pon tu best.pt ahí.")
 model = YOLO(MODEL_PATH)
@@ -39,7 +39,7 @@ def health():
 def routes():
     return [r.path for r in app.routes]
 
-# ---------- Núcleo de inferencia ----------
+# Núcleo de inferencia 
 def _infer(raw: bytes, conf: float):
     """
     Devuelve (detections:list, annotated_image:np.ndarray).
@@ -63,7 +63,7 @@ def _infer(raw: bytes, conf: float):
             "class_name": names.get(cls, str(cls)),
             "confidence": confb
         }
-        # agrega polígono
+        # agregar polígono
         if has_masks and i < len(r.masks.xy):
             flat = []
             for x, y in r.masks.xy[i]:
