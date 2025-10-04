@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.DS_Store
+
+# Virtualenv
+.venv/
+
+# FastAPI artifacts
+static/
+.env
+
+# Notebooks / tmp
+*.ipynb
+tmp/
+.cache/
+
+# Model weights (no subirlos por defecto)
+weights/*
+!weights/.gitkeep
